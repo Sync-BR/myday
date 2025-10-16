@@ -9,6 +9,12 @@ import com.github.sync.myday.service.AuthenticService;
 import com.github.sync.myday.service.TokenService;
 import com.github.sync.myday.service.UserService;
 import com.github.sync.myday.validate.TokenValidate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +24,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/api/user")
+@Tag(name = "Usuário", description = "Endpoints para gerenciamento e autenticação de usuários.")
 
 public class UserController {
 
@@ -35,7 +42,18 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
+
+
+
+
     @PostMapping("/create")
+    @Operation(summary = "Cria uma nova conta de usuário",
+            description = "Registra um novo usuário no sistema com validação de dados e verificação de e-mail existente.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso."),
+            @ApiResponse(responseCode = "400", description = "E-mail já existente ou dados inválidos.",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     public ResponseEntity<?> createAccount(@Valid @RequestBody UserDto object) {
         try {
             service.preparedAccount(object);
@@ -46,8 +64,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Autentica um usuário",
+            description = "Realiza login com e-mail e senha, gerando um token JWT em caso de sucesso.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login bem-sucedido."),
+            @ApiResponse(responseCode = "400", description = "Usuário não encontrado ou credenciais inválidas.",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     public ResponseEntity<?> authenticate(@RequestBody Map<String, String> loginRequest) {
-        System.out.println("loginRequest: " + loginRequest);
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
         try {
@@ -60,6 +84,13 @@ public class UserController {
     }
 
     @GetMapping
+    @Operation(summary = "Acessa rota protegida por token JWT",
+            description = "Verifica a validade do token JWT e retorna o nome do usuário autenticado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Acesso permitido."),
+            @ApiResponse(responseCode = "401", description = "Token ausente, inválido ou expirado.",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     public ResponseEntity<?> protectedEndpoint(@RequestHeader("Authorization") String authHeader) {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
