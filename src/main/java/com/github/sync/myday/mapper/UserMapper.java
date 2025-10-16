@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper implements MapperImp<UserEntity, UserDto> {
     private final PasswordMapper mapper;
+    private final ProfileMapper mapperProfile;
 
-    public UserMapper(PasswordMapper mapper) {
+    public UserMapper(PasswordMapper mapper, ProfileMapper mapperProfile) {
         this.mapper = mapper;
+        this.mapperProfile = mapperProfile;
     }
 
     @Override
@@ -19,9 +21,11 @@ public class UserMapper implements MapperImp<UserEntity, UserDto> {
                 object.getUserId(),
                 object.getUserAge(),
                 object.isActive(),
+                object.getUserPermission(),
                 object.getUserCreatedDate(),
                 object.getUserName(),
                 object.getUserEmail()
+
         );
     }
 
@@ -29,8 +33,9 @@ public class UserMapper implements MapperImp<UserEntity, UserDto> {
     public UserEntity convertToEntity(UserDto object) {
         return new UserEntity(
                 object.getId(),
-                object.isActive(),
                 object.getAge(),
+                object.isActive(),
+                object.getPermission(),
                 object.getCreatedDate(),
                 object.getName(),
                 object.getEmail(),
