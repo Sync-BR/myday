@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Em Manutenção - Meu Dia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8A84FF;
+            --primary-dark: #5A52D5;
+            --secondary: #FF6584;
+            --secondary-light: #FF8AA3;
+            --accent: #36D1DC;
+            --light: #F8F9FA;
+            --dark: #2D3748;
+            --gray: #718096;
+            --gray-light: #E2E8F0;
+            --success: #48BB78;
+            --warning: #ED8936;
+            --border-radius: 16px;
+            --border-radius-sm: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .maintenance-container {
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .maintenance-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 50px 40px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .maintenance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .maintenance-icon {
+            font-size: 80px;
+            color: var(--primary);
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .maintenance-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--dark);
+        }
+
+        .maintenance-subtitle {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .maintenance-message {
+            background: rgba(108, 99, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .maintenance-message p {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .maintenance-message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--gray-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 10px;
+            width: 65%;
+            animation: progress 2s ease-in-out;
+        }
+
+        .countdown-container {
+            margin-bottom: 30px;
+        }
+
+        .countdown-title {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-value {
+            width: 80px;
+            height: 80px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-value::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 13px;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .updates-section {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .updates-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .updates-title i {
+            color: var(--primary);
+        }
+
+        .update-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .update-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .update-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(108, 99, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .update-content {
+            flex: 1;
+        }
+
+        .update-text {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .update-date {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .contact-info {
+            background: var(--light);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .contact-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .contact-email {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .contact-email:hover {
+            color: var(--primary-dark);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            opacity: 0.1;
+            font-size: 24px;
+            animation: floatRandom 8s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 15%; animation-delay: 2s; }
+        .floating-element:nth-child(4) { bottom: 15%; right: 20%; animation-delay: 3s; }
+        .floating-element:nth-child(5) { top: 40%; left: 20%; animation-delay: 4s; }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes floatRandom {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, -15px) rotate(5deg); }
+            50% { transform: translate(-5px, -20px) rotate(-5deg); }
+            75% { transform: translate(-10px, -10px) rotate(3deg); }
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            100% { width: 65%; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .maintenance-card {
+                padding: 40px 25px;
+            }
+
+            .maintenance-title {
+                font-size: 28px;
+            }
+
+            .countdown-timer {
+                gap: 15px;
+            }
+
+            .countdown-value {
+                width: 70px;
+                height: 70px;
+                font-size: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maintenance-card {
+                padding: 30px 20px;
+            }
+
+            .maintenance-title {
+                font-size: 24px;
+            }
+
+            .maintenance-subtitle {
+                font-size: 16px;
+            }
+
+            .countdown-timer {
+                gap: 10px;
+            }
+
+            .countdown-value {
+                width: 60px;
+                height: 60px;
+                font-size: 18px;
+            }
+
+            .countdown-label {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="maintenance-container">
+    <div class="maintenance-card">
+        <!-- Floating Elements -->
+        <div class="floating-elements">
+            <div class="floating-element">😊</div>
+            <div class="floating-element">😢</div>
+            <div class="floating-element">😴</div>
+            <div class="floating-element">😰</div>
+            <div class="floating-element">😄</div>
+        </div>
+
+
+        <!-- Maintenance Icon -->
+        <div class="maintenance-icon">
+            <i class="fas fa-tools"></i>
+        </div>
+
+        <!-- Title & Subtitle -->
+        <h1 class="maintenance-title">Estamos em Manutenção</h1>
+        <p class="maintenance-subtitle">
+            Estamos realizando uma grande atualização para trazer novas funcionalidades incríveis!
+        </p>
+
+        <!-- Message -->
+        <div class="maintenance-message">
+            <p><strong>Grande Atualização em Andamento</strong></p>
+            <p>Estamos trabalhando na versão 2.0 do "Meu Dia" com melhorias significativas na experiência do usuário e novas funcionalidades emocionantes.</p>
+            <p>Esta atualização requer mais tempo, mas valerá a pena pelo resultado final!</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Progresso da Atualização</span>
+                <span>65%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-container">
+            <div class="countdown-title">Previsão de Lançamento</div>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="months">01</div>
+                    <div class="countdown-label">Meses</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">15</div>
+                    <div class="countdown-label">Dias</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">06</div>
+                    <div class="countdown-label">Horas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Updates Section -->
+        <div class="updates-section">
+            <h3 class="updates-title">
+                <i class="fas fa-sync-alt"></i>
+                O que está sendo implementado
+            </h3>
+
+            <div class="update-item">
+                <div class="update-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="update-content">
+                    <div class="update-text">Autenticação exclusivo para administradores</div>
+                    <div class="update-date">Previsão: 1 semanas</div>
+                </div>
+            </div>
+
+            <div class="update-item">
+                <div class="update-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="update-content">
+                    <div class="update-text">Pagina de login para administradores</div>
+                    <div class="update-date">Previsão: 1 semanas</div>
+                </div>
+            </div>
+
+            <div class="update-item">
+                <div class="update-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="update-content">
+                    <div class="update-text">Segurança na autenticação</div>
+                    <div class="update-date">Previsão: 1 semanas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-info">
+            <div class="contact-title">Dúvidas ou sugestões?</div>
+            <p>Entre em contato com nossa equipe:</p>
+            <a href="mailto:suporte@meudia.com" class="contact-email">suporte@meudia.com</a>
+        </div>
+
+        <!-- Social Links -->
+        <div class="social-links">
+            <a href="#" class="social-link">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="social-link">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    // Countdown Timer for Months and Days
+    function updateCountdown() {
+        // Set target date to 1 month and 15 days from now
+        const targetDate = new Date();
+        targetDate.setMonth(targetDate.getMonth() + 2);
+        targetDate.setDate(targetDate.getDate() + 15);
+        targetDate.setHours(10, 0, 0, 0); // Set to 10:00 AM
+
+        const now = new Date();
+        const difference = targetDate - now;
+
+        if (difference <= 0) {
+            document.getElementById('months').textContent = '00';
+            document.getElementById('days').textContent = '00';
+            document.getElementById('hours').textContent = '00';
+            return;
+        }
+
+        // Calculate months, days, and hours
+        const months = Math.floor(difference / (1000 * 60 * 60 * 24 * 30));
+        const days = Math.floor((difference % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+        document.getElementById('months').textContent = months.toString().padStart(2, '0');
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    }
+
+    // Update countdown every second
+    setInterval(updateCountdown, 1000);
+    updateCountdown(); // Initial call
+
+
+
+    // Progress bar animation
+    let progress = 65;
+    const progressInterval = setInterval(() => {
+        if (progress < 100) {
+            progress += Math.random() * 0.5; // Slower progress for longer maintenance
+            if (progress > 100) progress = 100;
+
+            const progressFill = document.querySelector('.progress-fill');
+            const progressLabel = document.querySelector('.progress-label span:last-child');
+
+            progressFill.style.width = `${progress}%`;
+            progressLabel.textContent = `${Math.round(progress)}%`;
+
+            if (progress === 100) {
+                clearInterval(progressInterval);
+            }
+        }
+    }, 5000); // Update every 5 seconds
+
+</script>
+</body>
+</html>

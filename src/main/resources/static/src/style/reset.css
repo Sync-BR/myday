@@ -1,0 +1,26 @@
+:root {
+    --primary: #6C63FF;
+    --primary-light: #8A84FF;
+    --primary-dark: #5A52D5;
+    --secondary: #FF6584;
+    --secondary-light: #FF8AA3;
+    --accent: #36D1DC;
+    --light: #F8F9FA;
+    --dark: #2D3748;
+    --gray: #718096;
+    --gray-light: #E2E8F0;
+    --success: #48BB78;
+    --warning: #ED8936;
+    --border-radius: 16px;
+    --border-radius-sm: 12px;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
