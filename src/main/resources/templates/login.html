@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Meu Dia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./../src/style/reset.css">
+    <link rel="stylesheet" href="./../src/style/style.css">
+</head>
+
+<body>
+<div class="login-container">
+
+
+    <!-- Left Side - Brand -->
+    <div class="login-brand">
+        <div class="floating-elements">
+            <div class="floating-element">😊</div>
+            <div class="floating-element">😢</div>
+            <div class="floating-element">😴</div>
+            <div class="floating-element">😰</div>
+            <div class="floating-element">😄</div>
+        </div>
+
+        <div class="brand-content">
+            <div class="logo">
+                <span>Painel Administrativo</span>
+            </div>
+
+            <h1 class="brand-title">Acesse o painel de controle do sistema</h1>
+            <p class="brand-subtitle">
+                Gerencie usuários, acompanhe publicações e mantenha o sistema sempre organizado e seguro.
+            </p>
+
+            <ul class="features-list">
+                <li><i class="fas fa-user-shield"></i> Controle total de usuários e permissões</li>
+                <li><i class="fas fa-database"></i> Acompanhe dados e estatísticas do sistema</li>
+                <li><i class="fas fa-cogs"></i> Configure funcionalidades e preferências</li>
+                <li><i class="fas fa-lock"></i> Segurança e acesso restrito a administradores</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Right Side - Login Form -->
+    <div class="login-form-section">
+
+        <div class="form-header">
+            <h2 class="form-title">Bem-vindo de volta!</h2>
+            <p class="form-subtitle">Entre na sua conta para continuar</p>
+        </div>
+
+        <div>
+            <div th:if="${param.error}" class="alert alert-danger mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>Sua conta está suspensa. Entre em contato com o suporte.
+            </div>
+
+            <div th:if="${param.permission}" class="alert alert-warning mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>Acesso negado. É necessária permissão para visualizar esta página.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success mb-4">
+                <i class="fas fa-check-circle me-2"></i>Você foi desconectado com sucesso
+            </div>
+            <div th:if="${param.success}" class="alert alert-success mb-4">
+                <i class="fas fa-exclamation-circle me-2"></i>Login authenticated success!
+            </div>
+            <div th:if="${param.userNotFound}" class="alert alert-danger mb-4">
+                <i class="fas fa-check-circle me-2"></i>Login ou senha incorreta
+            </div>
+        </div>
+
+
+        <form class="login-form" id="loginForm" th:action="@{/v1/admin/login}" method="post" >
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    E-mail
+                </label>
+                <input type="email" class="form-input" placeholder="seu@email.com" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Senha
+                </label>
+                <div class="password-container">
+                    <input type="password" class="form-input" placeholder="Digite sua senha" id="password" name="password" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-options">
+                <div class="remember-me">
+                    <div class="checkbox" id="rememberCheckbox"></div>
+                    <span>Lembrar de mim</span>
+                </div>
+                <a href="#" class="forgot-password">
+                    Esqueceu a senha?
+                </a>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="loginButton">
+                <i class="fas fa-sign-in-alt"></i>
+                Entrar na conta
+            </button>
+        </form>
+
+
+    </div>
+</div>
+
+<script>
+    // Toggle Password Visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+
+        // Change icon
+        const icon = this.querySelector('i');
+        icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    });
+
+    // Remember Me Checkbox
+    const rememberCheckbox = document.getElementById('rememberCheckbox');
+    rememberCheckbox.addEventListener('click', function () {
+        this.classList.toggle('checked');
+    });
+
+
+
+    // Continue as Guest
+    function continueAsGuest() {
+        showNotification('Continuando como visitante...', 'info');
+        setTimeout(() => {
+            // In real app: window.location.href = 'dashboard.html?guest=true';
+        }, 1000);
+    }
+
+    // Show Register Form
+    function showRegister() {
+        showNotification('Redirecionando para cadastro...', 'info');
+        setTimeout(() => {
+            // In real app: window.location.href = 'register.html';
+        }, 1000);
+    }
+
+    // Forgot Password
+    document.querySelector('.forgot-password').addEventListener('click', function (e) {
+        e.preventDefault();
+        const email = prompt('Digite seu e-mail para redefinir a senha:');
+        if (email) {
+            showNotification('Instruções enviadas para ' + email, 'success');
+        }
+    });
+
+    // Notification System
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        const bgColor = type === 'success' ? 'var(--success)' :
+            type === 'error' ? 'var(--secondary)' : 'var(--primary)';
+
+        notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: white;
+                padding: 15px 20px;
+                border-radius: var(--border-radius-sm);
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                font-weight: 500;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+        notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => notification.remove(), 300);
+        }, 4000);
+    }
+
+    // Add slide animations
+    const style = document.createElement('style');
+    style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+    document.head.appendChild(style);
+
+    // Auto-focus on email field
+    document.getElementById('email').focus();
+</script>
+</body>
+
+</html>
