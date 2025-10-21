@@ -28,7 +28,7 @@ public class AuthenticAdminValid {
         this.session = session;
     }
 
-    protected void checkPermission(PermissionUser memory){
+    public void checkPermission(PermissionUser memory){
         switch (memory){
             case ADMIN, MODERATION:
                 break;

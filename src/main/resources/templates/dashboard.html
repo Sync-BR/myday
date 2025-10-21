@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -622,10 +622,10 @@
                 </div>
                 <div class="stat-trend trend-up">
                     <i class="fas fa-arrow-up"></i>
-                    12%
+                    0%
                 </div>
             </div>
-            <div class="stat-value">2,847</div>
+            <div class="stat-value" th:text="*{countUser}">0</div>
             <div class="stat-label">Usuários Registrados</div>
         </div>
 
@@ -636,10 +636,10 @@
                 </div>
                 <div class="stat-trend trend-up">
                     <i class="fas fa-arrow-up"></i>
-                    8%
+                    0%
                 </div>
             </div>
-            <div class="stat-value">1,243</div>
+            <div class="stat-value" th:text="*{countPostByDate}">1,243</div>
             <div class="stat-label">Postagens Hoje</div>
         </div>
 
@@ -650,11 +650,11 @@
                 </div>
                 <div class="stat-trend trend-up">
                     <i class="fas fa-arrow-up"></i>
-                    23%
+                    0%
                 </div>
             </div>
-            <div class="stat-value">8,562</div>
-            <div class="stat-label">Curtidas Totais</div>
+            <div class="stat-value" th:text="*{countLikeByDate}">8,562</div>
+            <div class="stat-label">Curtidas Hoje</div>
         </div>
 
         <div class="stat-card danger">
@@ -845,31 +845,7 @@
         alert('Gerando relatório...');
     }
 
-    // Atualizar dados em tempo real (simulação)
-    function updateStats() {
-        // Em uma aplicação real, isso viria de uma API
-        const users = Math.floor(2847 + Math.random() * 10);
-        const posts = Math.floor(1243 + Math.random() * 5);
-        const likes = Math.floor(8562 + Math.random() * 20);
-        const reports = Math.floor(24 + Math.random() * 3);
 
-        document.querySelectorAll('.stat-value')[0].textContent = users.toLocaleString();
-        document.querySelectorAll('.stat-value')[1].textContent = posts.toLocaleString();
-        document.querySelectorAll('.stat-value')[2].textContent = likes.toLocaleString();
-        document.querySelectorAll('.stat-value')[3].textContent = reports.toLocaleString();
-    }
-
-    // Atualizar stats a cada 30 segundos
-    setInterval(updateStats, 30000);
-
-    // Menu ativo
-    document.querySelectorAll('.sidebar-menu a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
 </script>
 </body>
 </html>
