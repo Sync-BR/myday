@@ -28,8 +28,10 @@ public class PostMapper implements MapperImp<PostEntity, PostDto> {
                 object.getBody(),
                 object.getEmotion(),
                 null,
+                userMapper.convertToEntity(object.getUser()),
+                object.getDateCreated(),
+                object.getHoursCreated()
 //                object.getListLike(),
-                userMapper.convertToEntity(object.getUser())
         );
     }
 

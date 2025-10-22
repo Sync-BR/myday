@@ -1,5 +1,6 @@
 package com.github.sync.myday.controller;
 
+import com.github.sync.myday.dto.PostDto;
 import com.github.sync.myday.entity.LikeEntity;
 import com.github.sync.myday.entity.PostEntity;
 import com.github.sync.myday.handle.exception.InvalidTokenException;
@@ -10,6 +11,7 @@ import com.github.sync.myday.service.TokenService;
 import com.github.sync.myday.util.RequestHeaderUtil;
 import com.github.sync.myday.validate.TokenValidate;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.*;
@@ -34,19 +36,17 @@ public class PostController {
     }
 
 
-
     @PostMapping
-    public ResponseEntity<?> createPost(@RequestHeader("Authorization") String authHeader, @RequestBody PostEntity post) {
+    public ResponseEntity<?> createPost(@RequestHeader("Authorization") String authHeader,@Valid @RequestBody PostDto memory) {
         utilRequest.checkHeaderBearer(authHeader);
-
-            validate.valida(authHeader.substring(7));
-            String token = authHeader.substring(7);
-            if (!jwtUtil.validateToken(token)) {
-                return ResponseEntity.status(401).body("Token inválido ou expirado!");
-            }
-            post.setPostUser(serviceToken.compareTokenAndUserEmail(jwtUtil.getUsernameFromToken(token), post.getPostUser().getUserEmail()));
-            servicePost.preparedPost(post);
-            return ResponseEntity.ok().body("Post created");
+        validate.valida(authHeader.substring(7));
+        String token = authHeader.substring(7);
+        if (!jwtUtil.validateToken(token)) {
+            return ResponseEntity.status(401).body("Token inválido ou expirado!");
+        }
+        memory.setUser(serviceToken.compareTokenAndUserEmail(jwtUtil.getUsernameFromToken(token), memory.getUser().getEmail()));
+        servicePost.preparedPost(memory);
+        return ResponseEntity.ok().body("Post created");
 
     }
 

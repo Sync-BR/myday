@@ -8,4 +8,5 @@ import java.time.LocalDateTime;
 
 public interface PostRepository extends JpaRepository<PostEntity,Long> {
     long countAllPostBycreatedDatePost(LocalDate date);
+    Long countByCreatedDatePostBetween(LocalDate startDate, LocalDate endDate);
 }

@@ -49,5 +49,15 @@ public class PostEntity {
         this.postUser = postUser;
     }
 
-
+    public PostEntity(long idPost, boolean guest, boolean comments, String body, CategoryPost emotion, List<LikeEntity> likes, UserEntity postUser, LocalDate createdDatePost, LocalTime createdHourPost) {
+        this.idPost = idPost;
+        this.guest = guest;
+        this.comments = comments;
+        this.body = body;
+        this.emotion = emotion;
+        this.likes = likes;
+        this.postUser = postUser;
+        this.createdDatePost = createdDatePost;
+        this.createdHourPost = createdHourPost;
+    }
 }
