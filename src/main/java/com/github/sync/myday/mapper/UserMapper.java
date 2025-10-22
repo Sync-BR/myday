@@ -24,7 +24,8 @@ public class UserMapper implements MapperImp<UserEntity, UserDto> {
                 object.getUserPermission(),
                 object.getUserCreatedDate(),
                 object.getUserName(),
-                object.getUserEmail()
+                object.getUserEmail(),
+                mapper.convertToDto(object.getPasswordEntity())
 
         );
     }

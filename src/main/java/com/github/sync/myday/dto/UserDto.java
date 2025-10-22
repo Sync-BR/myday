@@ -36,7 +36,7 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(long id, int age, boolean active, PermissionUser permission, LocalDate createdDate, String name, String email) {
+    public UserDto(long id, int age, boolean active, PermissionUser permission, LocalDate createdDate, String name, String email, PasswordDto password) {
         this.id = id;
         this.age = age;
         this.active = active;
@@ -44,6 +44,6 @@ public class UserDto {
         this.createdDate = createdDate;
         this.name = name;
         this.email = email;
-
+        this.password = password;
     }
 }
