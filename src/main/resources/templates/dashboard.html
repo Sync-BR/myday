@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Meu Dia</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.stock.min.js"></script>
+
     <style>
         :root {
             --primary: #6C63FF;
@@ -541,6 +543,56 @@
             }
         }
     </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener("DOMContentLoaded", function() {
+
+            // Recebe o número vindo do backend (ex: 5)
+            var userRegistered = /*[[${userRegisteredGraphic}]]*/ 0;
+            var postRegistered = /*[[${postRegisteredGraphic}]]*/ 0;
+
+            // Cria um array com apenas um ponto de dado
+            var dataPoints = [
+                { label: "Usuários Registrados", y: userRegistered },
+                { label: "Postagem Registrados", y: postRegistered }
+            ];
+
+            // Configura e desenha o gráfico
+            var chart = new CanvasJS.Chart("chartContainer", {
+                backgroundColor: "#1a202c",
+                animationEnabled: true,
+                title: {
+                    text: "Atividades de Usuários",
+                    fontColor: "white"
+                },
+                axisX: {
+                    labelFontColor: "white",
+                    lineColor: "#00ff88",
+                    tickColor: "#00ff88"
+                },
+                axisY: {
+
+                    labelFontColor: "white",
+                    gridColor: "#222222",
+                    lineColor: "#00ff88",
+                    tickColor: "#00ff88"
+                },
+                data: [{
+                    type: "column",
+                    color: "#00ff88",
+                    indexLabelFontColor: "white",
+                    toolTipContent: "<b>{label}</b>: {y}",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            chart.render();
+
+        });
+        /*]]>*/
+    </script>
+
+
 </head>
 <body>
 <!-- Sidebar -->
@@ -679,14 +731,14 @@
                 <h3 class="chart-title">Atividade dos Usuários</h3>
                 <div class="chart-actions">
                     <button class="btn btn-outline">7 Dias</button>
-                    <button class="btn btn-outline">30 Dias</button>
-                    <button class="btn btn-outline">1 Ano</button>
                 </div>
+
             </div>
-            <div style="height: 300px; background: rgba(255,255,255,0.02); border-radius: var(--border-radius-sm); display: flex; align-items: center; justify-content: center; color: var(--gray);">
-                [Gráfico de Atividade]
-            </div>
-        </div>
+<!--            <div style="height: 300px; background: rgba(255,255,255,0.02); border-radius: var(&#45;&#45;border-radius-sm); display: flex; align-items: center; justify-content: center; color: var(&#45;&#45;gray);">-->
+<!--                [Gráfico de Atividade]-->
+<!--            </div>-->
+            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+       </div>
 
         <div class="chart-card">
             <div class="chart-header">
@@ -711,15 +763,18 @@
         </div>
 
         <div class="activity-list">
-            <div class="activity-item">
-                <div class="activity-icon success">
-                    <i class="fas fa-user-plus"></i>
+            <th:block th:each="activity : ${recentActivity}">
+                <div class="activity-item" th:if="*{activity.activity.REGISTERED}">
+                    <div class="activity-icon success">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-text">Novo usuário registrado: <div th:text="*{activity.getActivityInfo()}"></div></div>
+                        <div class="activity-time">Há 5 minutos</div>
+                    </div>
                 </div>
-                <div class="activity-content">
-                    <div class="activity-text">Novo usuário registrado: Maria Silva</div>
-                    <div class="activity-time">Há 5 minutos</div>
-                </div>
-            </div>
+            </th:block>
+
 
             <div class="activity-item">
                 <div class="activity-icon warning">
@@ -731,25 +786,25 @@
                 </div>
             </div>
 
-            <div class="activity-item">
-                <div class="activity-icon info">
-                    <i class="fas fa-cog"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-text">Backup do sistema realizado com sucesso</div>
-                    <div class="activity-time">Há 1 hora</div>
-                </div>
-            </div>
+<!--            <div class="activity-item">-->
+<!--                <div class="activity-icon info">-->
+<!--                    <i class="fas fa-cog"></i>-->
+<!--                </div>-->
+<!--                <div class="activity-content">-->
+<!--                    <div class="activity-text">Backup do sistema realizado com sucesso</div>-->
+<!--                    <div class="activity-time">Há 1 hora</div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="activity-item">
-                <div class="activity-icon danger">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <div class="activity-content">
-                    <div class="activity-text">Tentativa de acesso não autorizado bloqueada</div>
-                    <div class="activity-time">Há 2 horas</div>
-                </div>
-            </div>
+<!--            <div class="activity-item">-->
+<!--                <div class="activity-icon danger">-->
+<!--                    <i class="fas fa-exclamation-circle"></i>-->
+<!--                </div>-->
+<!--                <div class="activity-content">-->
+<!--                    <div class="activity-text">Tentativa de acesso não autorizado bloqueada</div>-->
+<!--                    <div class="activity-time">Há 2 horas</div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 
@@ -795,14 +850,18 @@
             <div class="system-status">
                 <div class="status-list">
                     <div class="status-item">
-                        <div class="status-info">
-                            <div class="status-indicator online"></div>
-                            <span class="status-name">Servidor Web</span>
-                        </div>
-                        <span class="status-value">Online</span>
+                            <div class="status-info">
+                                <div class="status-indicator online"  th:if="*{statusFrontend}"></div>
+                                <div class="status-indicator offline"  th:unless="*{statusFrontend}"></div>
+                                <span class="status-name">Servidor Web</span>
+                            </div>
+                        <span class="status-value" th:if="*{statusFrontend}">Online</span>
+                        <span class="status-value" th:unless="*{statusFrontend}">Offline</span>
+
                     </div>
 
                     <div class="status-item">
+
                         <div class="status-info">
                             <div class="status-indicator online"></div>
                             <span class="status-name">Banco de Dados</span>
@@ -812,10 +871,12 @@
 
                     <div class="status-item">
                         <div class="status-info">
-                            <div class="status-indicator warning"></div>
+                            <div class="status-indicator online" th:if="*{statusCache}"></div>
+                            <div class="status-indicator warning" th:unless="*{statusCache}"></div>
                             <span class="status-name">Cache</span>
                         </div>
-                        <span class="status-value">Performance Reduzida</span>
+                        <span class="status-value" th:if="*{statusCache}">Alta Perfomance</span>
+                        <span class="status-value" th:unless="*{statusCache}">Performance Reduzida</span>
                     </div>
 
                     <div class="status-item">
@@ -847,5 +908,8 @@
 
 
 </script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+
+<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
 </body>
 </html>
