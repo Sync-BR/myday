@@ -26,25 +26,38 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/src/**",
+
+                                "/user/login",
+                                "/api/v1/user/login",
+
                                 "/login",
                                 "/v1/admin/login",
+
                                 "/docs/**",
                                 "/swagger-ui/**",
                                 "swagger-ui.html",
                                 "/v1/api/user/create", // rota pública (cadastro)
                                 "/v1/api/user/login" // rota pública (login)
                         ).permitAll()
+                        .requestMatchers(
+                                "/home",
+                                "/v1/post/publish"
+                        ).authenticated()
                         .anyRequest().authenticated()
 
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                .formLogin(form -> form
-                        .loginPage("/")
-                        //   .loginProcessingUrl("/v1/client/login")
-                        .defaultSuccessUrl("/home", true)
-                        .permitAll()
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                        .sessionFixation().migrateSession()
+                        .maximumSessions(1)
+                        .expiredUrl("/")
                 )
+//                .formLogin(form -> form
+//                        .loginPage("/user/login")
+//                       .loginProcessingUrl("/")
+//                                .defaultSuccessUrl("/home", true)
+//                                .permitAll()
+//                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
